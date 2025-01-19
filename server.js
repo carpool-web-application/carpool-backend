@@ -1,7 +1,9 @@
 //Importing reminders.js
-import app from './carpooling-app/carpooling.js';
-import http from 'http'; 
-import { Server } from 'socket.io'; 
+import app from "./carpooling-app/carpooling.js";
+import http from "http";
+import { Server } from "socket.io";
+import dotenv from "dotenv";
+dotenv.config();
 
 const server = http.createServer(app);
 
@@ -10,35 +12,34 @@ const io = new Server(server, {
   cors: {
     origin: "http://localhost:3000", // Allows access from your React client
     methods: ["GET", "POST"],
-    credentials: true // Allows cookies and session information to be sent
-  }
+    credentials: true, // Allows cookies and session information to be sent
+  },
 });
 
 // Socket.io event listeners
-io.on('connection', (socket) => {
-  console.log('A user connected ' + socket.id);
+io.on("connection", (socket) => {
+  console.log("A user connected " + socket.id);
 
-
-  socket.on("send_message" , (data) => {
+  socket.on("send_message", (data) => {
     console.log(data);
-  })
-
-  socket.on('setup', (data) => {
-    socket.join(data._id);
-    socket.emit("connected");
-  })
-  // Handle disconnection
-  socket.on('disconnect', () => {
-    console.log('User disconnected' + socket.id);
   });
 
-  socket.emit('message', { message: 'Welcome to the WebSocket Server!' });
+  socket.on("setup", (data) => {
+    socket.join(data._id);
+    socket.emit("connected");
+  });
+  // Handle disconnection
+  socket.on("disconnect", () => {
+    console.log("User disconnected" + socket.id);
+  });
+
+  socket.emit("message", { message: "Welcome to the WebSocket Server!" });
 });
 //creating the port
-const port = 9000;
+const port = process.env.PORT;
 //starting the server value and listening
 server.listen(port, () => console.log(`server listening at ${port}`));
 /* server.listen(port, () => {
     console.log(`Server running on port ${port}`);
   }); */
-export {io};
+export { io };

@@ -4,7 +4,8 @@ import {
   removeuser,
   updateDetails,
   searchuser,
-  getuserName
+  getuserName,
+  getuserDetails,
 } from "../services/user-service.js";
 
 export const post = async (request, response) => {
@@ -19,12 +20,26 @@ export const post = async (request, response) => {
 
 export const index = async (request, response) => {
   try {
-    const params = {};
+    const params = request;
     const users = await searchuser(params);
+
     setSuccessfulResponse(users, response);
   } catch (err) {
     setErrorResponse(err, response);
-    //jj
+  }
+};
+
+export const login = async (request, response, next) => {
+  try {
+    const body = request.body;
+    const user = await getuserDetails(body);
+    if (!user) {
+      return response.status(401).send("User not found or password incorrect");
+    }
+    request.body = user;
+    next();
+  } catch (err) {
+    setErrorResponse(err, response);
   }
 };
 
@@ -39,10 +54,9 @@ export const find = async (request, response) => {
   }
 };
 
-
 export const findbyUserName = async (request, response) => {
   try {
-    const id = request.params.userName;
+    const id = request.params.riderId;
     const user = await getuserName(id);
     setSuccessfulResponse(user, response);
   } catch (err) {

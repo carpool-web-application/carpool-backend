@@ -1,4 +1,3 @@
-
 import userSchema from "../model/user.js";
 
 export const saveUser = async (newuser) => {
@@ -15,14 +14,21 @@ export const getuser = async (id) => {
 
 export const getuserName = async (id) => {
   //return value of asyn func is promise
-  const user = userSchema.findOne({userName:id}).exec();
+  const user = await userSchema.findOne({ UserId: id }).exec();
   return user;
 };
 
+export const getuserDetails = async (body) => {
+  //return value of asyn func is promise
+  const user = await userSchema
+    .findOne({ userName: body.userName, userPassword: body.userPassword })
+    .exec();
+  return user;
+};
 
 export const removeuser = async (id) => {
   //return value of asyn func is promise
-  const user = userSchema.findByIdAndDelete(id).exec();
+  const user = userSchema.findByIdAndDelete({ UserId: id }).exec();
   return user;
 };
 
@@ -47,4 +53,3 @@ export const searchuser = async (params) => {
   const users = userSchema.find(params).exec();
   return users;
 };
-

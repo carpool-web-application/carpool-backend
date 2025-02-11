@@ -11,6 +11,7 @@ import {
 export const post = async (request, response) => {
   try {
     const newUser = request.body;
+    console.log(newUser);
     const savedUser = await saveUser(newUser);
     setSuccessfulResponse(savedUser, response);
   } catch (err) {
@@ -33,6 +34,7 @@ export const login = async (request, response, next) => {
   try {
     const body = request.body;
     const user = await getuserDetails(body);
+    console.log(user);
     if (!user) {
       return response.status(401).send("User not found or password incorrect");
     }

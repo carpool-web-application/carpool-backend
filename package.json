@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/neu-mis-info-6150-spring-2023/lecture-9-lab-nihil27011996#readme",
   "dependencies": {
+    "bcrypt": "^5.1.1",
     "cars": "^1.1.6",
     "cors": "^2.8.5",
     "debug": "^4.3.4",

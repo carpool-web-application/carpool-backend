@@ -14,16 +14,34 @@ export const getuser = async (id) => {
 
 export const getuserName = async (id) => {
   //return value of asyn func is promise
-  const user = await userSchema.findOne({ UserId: id }).exec();
+  const user = await userSchema.findOne({ userName: id }).exec();
   return user;
 };
 
 export const getuserDetails = async (body) => {
   //return value of asyn func is promise
-  const user = await userSchema
-    .findOne({ userName: body.userName, userPassword: body.userPassword })
-    .exec();
-  return user;
+  const user = await userSchema.findOne({ userName: body.userName }).exec();
+  if (!user) {
+    return null;
+  }
+
+  const isMatch = await new Promise((resolve, reject) => {
+    user.comparePassword(body.userPassword, (error, match) => {
+      if (error) {
+        reject(error);
+      } else {
+        resolve(match);
+      }
+    });
+  });
+
+  if (isMatch) {
+    console.log("User authenticated successfully.");
+    return user;
+  } else {
+    console.log("Authentication failed. Incorrect password.");
+    return null;
+  }
 };
 
 export const removeuser = async (id) => {
@@ -40,13 +58,6 @@ export const updateDetails = async (id, updateduser) => {
   const user = userSchema.findByIdAndUpdate(id, userNew, { new: true }).exec();
   return user;
 };
-
-/* 
-export const updateuser = async (id, updatedCommuter) => {
-  const userwithdate  = {...updateuser, lastUpdatedDate: Date.now()}
-  const user = user.findByIdAndUpdate(id, userwithdate, {new: true}).exec();
-  return user;      
-} */
 
 export const searchuser = async (params) => {
   //return value of asyn func is promise

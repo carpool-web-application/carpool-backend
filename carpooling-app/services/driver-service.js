@@ -1,19 +1,19 @@
-import Driver from "../model/driver.js";
+import user from "../model/user.js";
 
 export const saveDriver = async (newDriver) => {
   //return value of asyn func is promise
-  const driver = new Driver(newDriver);
+  const driver = new user(newDriver);
   return driver.save();
 };
 
 export const getDriver = async (id) => {
   //return value of asyn func is promise
-  const driver = Driver.findOne({ DriverId: id }).exec();
+  const driver = user.findOne({ UserId: id }).exec();
   return driver;
 };
 export const removeDriver = async (id) => {
   //return value of asyn func is promise
-  const driver = Driver.findOneAndDelete({ DriverId: id }).exec();
+  const driver = user.findOneAndDelete({ UserId: id }).exec();
   return driver;
 };
 
@@ -22,11 +22,9 @@ export const updateDetails = async (id, updatedDriver) => {
   //return value of asyn func is promise
   //const reminderwithdate  = {...updatedReminder, lastModifiedDate: Date.now()}
   const driverNew = { ...updatedDriver };
-  const driver = Driver.findOneAndUpdate(
-    { DriverUserName: id },
-    { $set: driverNew },
-    { new: true }
-  ).exec();
+  const driver = user
+    .findOneAndUpdate({ userName: id }, { $set: driverNew }, { new: true })
+    .exec();
   return driver;
 };
 
@@ -39,6 +37,6 @@ export const updateDriver = async (id, updatedCommuter) => {
 
 export const searchDriver = async (params) => {
   //return value of asyn func is promise
-  const drivers = Driver.find(params).exec();
-  return drivers;
+  const drivers = user.find(params).exec();
+  return drivers || {};
 };

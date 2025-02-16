@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 import { v4 as uuidv4 } from "uuid";
 import bcrypt from "bcrypt";
+import { type } from "os";
 
 const user = new mongoose.Schema({
   UserId: {
@@ -9,19 +10,58 @@ const user = new mongoose.Schema({
   },
   userName: {
     type: String,
-    required: "UserName is required.",
+    required: [true, "User Name is required"],
+    unique: true,
   },
   userEmail: {
     type: String,
-    required: "UserEmail is required.",
+    required: [true, "User Email is required"],
+    unique: true,
   },
   userPassword: {
     type: String,
-    required: "Password is required.",
+    required: [true, "User Password is required"],
+  },
+  PhoneNumber: {
+    type: String,
+    required: [true, "User Phone Number is required"],
   },
   commuterType: {
     type: String,
-    // required: 'Commuter Type is required.'
+    enum: ["driver", "rider", "admin"],
+  },
+  driverDetails: {
+    licenseNumber: {
+      type: String,
+    },
+    vehicle: {
+      make: String,
+      model: String,
+      year: Number,
+      plateNumber: String,
+    },
+    availability: {
+      type: Boolean,
+      default: false,
+    },
+  },
+  commuterPreference: {
+    preferredDriverGender: {
+      type: String,
+      enum: ["male", "female", "any"],
+    },
+  },
+  averageRating: {
+    type: Number,
+    default: 0,
+  },
+  totalRating: {
+    type: Number,
+    default: 0,
+  },
+  createdDate: {
+    type: Date,
+    default: Date.now,
   },
 });
 

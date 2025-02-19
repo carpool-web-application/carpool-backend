@@ -1,8 +1,13 @@
 import userSchema from "../model/user.js";
+import AppError from "../utils/AppError.js";
 
-export const saveUser = async (newuser) => {
+export const saveUser = async (newUser) => {
   //return value of asyn func is promise
-  const user = new userSchema(newuser);
+  const fetchUser = userSchema.find({ userId: newUser.UserId });
+  if (fetchUser) {
+    return next(new AppError("User already exists", 401));
+  }
+  const user = new userSchema(newUser);
   return user.save();
 };
 

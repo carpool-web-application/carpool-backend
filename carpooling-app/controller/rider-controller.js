@@ -6,66 +6,48 @@ import {
   updateDetails,
   searchRider,
 } from "../services/rider-service.js";
+import { catchAsyncFunction } from "../utils/catchAsyncFunction.js";
+import setSuccessfullResponse from "../utils/successResponse.js";
 //reminderService.save();
 
 //define the method for reminder creation
-export const post = async (request, response) => {
-  try {
-    const newRider = request.body;
-    const savedRider = await saveRider(newRider);
-    setSuccessfulResponse(savedRider, response);
-  } catch (err) {
-    setErrorResponse(err, response);
-  }
-};
+export const post = catchAsyncFunction(async (request, response) => {
+  const newRider = request.body;
+  const savedRider = await saveRider(newRider);
+  setSuccessfullResponse(savedRider, response);
+});
 
-export const index = async (request, response) => {
-  try {
-    const params = {};
-    const riders = await searchRider(params);
-    setSuccessfulResponse(riders, response);
-  } catch (err) {
-    setErrorResponse(err, response);
-  }
-};
+export const index = catchAsyncFunction(async (request, response) => {
+  const params = {};
+  const riders = await searchRider(params);
+  setSuccessfullResponse(riders, response);
+});
 
 //define the method for rider searching
-export const find = async (request, response) => {
-  try {
-    const id = request.params.RiderUserName;
-    const rider = await getRider(id);
-    setSuccessfulResponse(rider, response);
-  } catch (err) {
-    setErrorResponse(err, response);
-  }
-};
+export const find = catchAsyncFunction(async (request, response) => {
+  const id = request.params.RiderUserName;
+  const rider = await getRider(id);
+  setSuccessfullResponse(rider, response);
+});
 
 //define the method for reminder deletion
-export const deleteRider = async (request, response) => {
-  try {
-    const id = request.params.id;
-    const rider = await removeRider(id);
-    setSuccessfulResponse(rider, response);
-  } catch (err) {
-    setErrorResponse(err, response);
-  }
-};
+export const deleteRider = catchAsyncFunction(async (request, response) => {
+  const id = request.params.id;
+  const rider = await removeRider(id);
+  setSuccessfullResponse(rider, response);
+});
 
 //define the method for reminder updation
-export const updateRider = async (request, response) => {
-  try {
-    const id = request.params.RiderUserName;
-    const body = request.body;
-    const rider = await updateDetails(id, body);
+export const updateRider = catchAsyncFunction(async (request, response) => {
+  const id = request.params.RiderUserName;
+  const body = request.body;
+  const rider = await updateDetails(id, body);
 
-    setSuccessfulResponse(rider, response);
-  } catch (err) {
-    setErrorResponse(err, response);
-  }
-};
-
+  setSuccessfullResponse(rider, response);
+});
+/* 
 //define when the request is successful
-const setSuccessfulResponse = (obj, response) => {
+const setSuccessfullResponse = (obj, response) => {
   response.status(200);
   response.json(obj);
 };
@@ -80,3 +62,4 @@ const setErrorResponse = (err, response) => {
     },
   });
 };
+ removed due to HOC and resuable component*/

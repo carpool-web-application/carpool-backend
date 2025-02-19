@@ -1,82 +1,57 @@
 import mongoose from "mongoose";
+import { v4 as uuidv4 } from "uuid";
 
-const riderOrderSchema = new mongoose.Schema({
-    riderOrderNumber: {
-        type: String,
-        default: null//required: 'The title field is required.'
+const riderOrderSchema = new mongoose.Schema(
+  {
+    ride: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Ride",
+      required: true,
     },
-    DriverOrderNumber:{
-        type: Number,
-        default: null //required: 'Number of Seats is required.'
+    rider: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "userAuths",
+      required: true,
     },
-    RiderId: {
-        type: String,
-        default: null//  required: 'The Details field is required.'
+    driver: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "userAuths",
+      required: true,
     },
-    DriverId: {
-        type: String,
-        default: null// required: 'Starting Location is required.'
+    fare: {
+      type: Number,
+      required: true,
     },
-    StartingLocation: {
-        type: String,
-        default: null// required: 'Starting Location is required.'
+    seatsBooked: {
+      type: Number,
+      required: true,
     },
-    Destination: {
-        type: String,
-        default: null//required: 'Destination is required.'
+    paymentStatus: {
+      type: String,
+      enum: ["pending", "paid"],
+      default: "pending",
     },
-    PickUpTime: {
-        type: Date,
-        default: Date.now()
+    orderStatus: {
+      type: String,
+      enum: ["completed", "cancelled"],
+      default: "completed",
     },
-    DriverPostStatus:{
-        type: String,
-        default: null// required: 'Number of Seats is required.'
+    riderRated: {
+      type: Boolean,
+      default: false,
+    }, // ✅ Rider rating flag
+    driverRated: {
+      type: Boolean,
+      default: false,
+    }, // ✅ Driver rating flag
+    createdAt: {
+      type: Date,
+      default: Date.now,
     },
-    CommuteStatus:{
-        type: String,
-        default: null// required: 'Number of Seats is required.'
-    },
-    Cost:{
-        type: Number,
-        default: null// required: 'Number of Seats is required.'
-    },
-    OriginLatitude:{
-        type: String,
-        default: null//required: 'Number of Seats is required.'
-    },
-    OriginLongitude:{
-        type: String,
-        default: null // required: 'Number of Seats is required.'
-    },
-    DestinationLatitude:{
-        type: String,
-        default: null//required: 'Number of Seats is required.'
-    },
-    DestinationLongitude:{
-        type: String,
-        default: null// required: 'Number of Seats is required.'
-    },
-    driverseats:{
-        type: Number,
-        default: null// required: 'Number of Seats is required.'
-    },
-    Availableseats:{
-        type: Number,
-        default: null// required: 'Number of Seats is required.'
-    },
-    rejectedRiders: [{
-        type: String,
-        default: null 
-    }],
-    RatingFlag:{
-        type: String,
-       default: 'N' // required: 'Number of Seats is required.'
-    }
-
-}, 
-
+  },
+  { timestamps: true }
 );
-const riderOrder = mongoose.model('RiderOrder',riderOrderSchema);
+
+const riderOrder = mongoose.model("RiderOrders", riderOrderSchema);
 
 export default riderOrder;

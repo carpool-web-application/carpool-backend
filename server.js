@@ -8,7 +8,6 @@ import dotenv from "dotenv";
 dotenv.config();
 
 const server = http.createServer(app);
-
 // Creating the port
 const port = process.env.PORT || 5000; // Default to 5000 if PORT is not set
 

@@ -1,84 +1,67 @@
+import { timeStamp } from "console";
 import mongoose from "mongoose";
+import { v4 as uuidv4 } from "uuid";
 
-const riderOrderReqSchema = new mongoose.Schema({
-    riderOrderNumber: {
-        type: String,
-        default: null//required: 'The title field is required.'
+const riderReqSchema = new mongoose.Schema(
+  {
+    RequestId: {
+      type: String,
+      default: uuidv4,
     },
-    DriverOrderNumber:{
-        type: Number,
-        default: null//required: 'Number of Seats is required.'
+    ride: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Ride",
+      required: true,
     },
-    RiderId: {
-        type: String,
-        default: null//  required: 'The Details field is required.'
-    },
-    DriverId: {
-        type: String,
-       default: null // required: 'Starting Location is required.'
+    rider: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
     },
     StartingLocation: {
-        type: String,
-       default: null // required: 'Starting Location is required.'
+      type: String,
+      default: null, // required: 'Starting Location is required.'
     },
     Destination: {
-        type: String,
-        default: null//required: 'Destination is required.'
+      type: String,
+      default: null, //required: 'Destination is required.'
     },
     PickUpTime: {
-        type: Date,
-        default: Date.now()
+      type: Date,
+      default: Date.now(),
     },
-    DriverPostStatus:{
-        type: String,
-       default: null // required: 'Number of Seats is required.'
+    /*  DriverPostStatus: {
+    type: String,
+    default: null, 
+  }, removed as it is taking from the driver rides*/
+    CommuteStatus: {
+      type: String,
+      enum: ["pending", "approved", "rejected"],
+      default: "pending",
     },
-    CommuteStatus:{
-        type: String,
-       default: null // required: 'Number of Seats is required.'
+    seatsRequested: {
+      type: String,
+      required: true,
     },
-    OriginLatitude:{
-        type: String,
-        default: null//required: 'Number of Seats is required.'
+    OriginLatitude: {
+      type: String,
+      default: null,
     },
-    OriginLongitude:{
-        type: String,
-       default: null // required: 'Number of Seats is required.'
+    OriginLongitude: {
+      type: String,
+      default: null,
     },
-    DestinationLatitude:{
-        type: String,
-        default: null//required: 'Number of Seats is required.'
+    DestinationLatitude: {
+      type: String,
+      default: null,
     },
-    DestinationLongitude:{
-        type: String,
-       default: null // required: 'Number of Seats is required.'
+    DestinationLongitude: {
+      type: String,
+      default: null,
     },
-    Riderseats:{
-        type: String,
-       default: null // required: 'Number of Seats is required.'
-    },
-    Ratings: [{
-        type: Number,
-        default: null 
-    }]
-    ,
-    PaymentFlag:{
-        type: String,
-       default: 'N' // required: 'Number of Seats is required.'
-    }
-    ,
-    RatingFlag:{
-        type: String,
-       default: 'N' // required: 'Number of Seats is required.'
-    }
-    ,
-    Cost:{
-        type: Number,
-       default: 0 // required: 'Number of Seats is required.'
-    }
-}, 
-
+  },
+  { timestamps: true }
 );
-const riderOrderReq = mongoose.model('RiderOrderReq',riderOrderReqSchema);
+const riderRequest = mongoose.model("riderRequest", riderReqSchema);
 
-export default riderOrderReq;
+export default riderRequest;

@@ -1,19 +1,19 @@
-import Rider from "../model/rider.js";
+import user from "../model/user.js";
 
 export const saveRider = async (newRider) => {
   //return value of asyn func is promise
-  const rider = new Rider(newRider);
+  const rider = new user(newRider);
   return rider.save();
 };
 
 export const getRider = async (id) => {
   //return value of asyn func is promise
-  const rider = Rider.findOne({ RiderId: id }).exec();
+  const rider = user.findOne({ UserId: id }).exec();
   return rider;
 };
 export const removeRider = async (id) => {
   //return value of asyn func is promise
-  const rider = Rider.findByIdAndDelete(id).exec();
+  const rider = user.findByIdAndDelete(id).exec();
   return rider;
 };
 
@@ -22,11 +22,9 @@ export const updateDetails = async (id, updatedrider) => {
   //return value of asyn func is promise
   //const reminderwithdate  = {...updatedReminder, lastModifiedDate: Date.now()}
   const riderNew = { ...updatedrider };
-  const rider = Rider.findOneAndUpdate(
-    { RiderUserName: id },
-    { $set: riderNew },
-    { new: true }
-  ).exec();
+  const rider = user
+    .findOneAndUpdate({ UserName: id }, { $set: riderNew }, { new: true })
+    .exec();
   //const rider =  Rider.findOneAndUpdate({ RiderUserName: id } ,{ $push: { ratings: riderNew.ratings } },riderNew,{new: true}).exec();
   return rider;
 };
@@ -40,6 +38,6 @@ export const updateRider = async (id, updatedCommuter) => {
 
 export const searchRider = async (params) => {
   //return value of asyn func is promise
-  const riders = Rider.find(params).exec();
+  const riders = user.find(params).exec();
   return riders;
 };

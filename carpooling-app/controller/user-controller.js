@@ -44,7 +44,7 @@ export const find = catchAsyncFunction(async (request, response) => {
 });
 
 export const findbyUserName = catchAsyncFunction(async (request, response) => {
-  const id = request.params.riderId;
+  const id = request.params.userId;
   const user = await getuserName(id);
   setSuccessfullResponse(user, response);
 });

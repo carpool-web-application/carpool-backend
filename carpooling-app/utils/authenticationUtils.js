@@ -15,6 +15,7 @@ export const generateJWT = (req, res, next) => {
   }
   //creating the payload to be signed
   const userPayload = {
+    id: user._id,
     userId: user.UserId,
     userName: user.userName,
     userEmail: user.userEmail,
@@ -30,8 +31,10 @@ export const generateJWT = (req, res, next) => {
 
   res.locals.token = token; // Store token in res.locals for use in the next middleware
   res.status(200).json({
+    id: user._id,
     userId: user.UserId,
     commuterType: user.commuterType,
+    userEmail: user.userEmail,
     token,
     message: "Login successful and token generated.",
   });
@@ -57,12 +60,12 @@ export const verifyJWT = (req, res, next) => {
 export const validateUser = (roleAccess) => {
   return catchAsyncFunction(async (req, res, next) => {
     const userDetails = req.token;
-    const user = await userSchema.find({ userId: userDetails.UserId }).exec();
-
+    const user = await userSchema
+      .findOne({ UserId: userDetails.userId })
+      .exec();
     if (!user) {
-      return next(new AppError("User Does not exist", 401));
+      return next(new AppError("User Does not exist", 404));
     }
-
     if (!roleAccess.includes(user.commuterType)) {
       return next(
         new AppError(

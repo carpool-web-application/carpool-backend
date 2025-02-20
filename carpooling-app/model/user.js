@@ -28,7 +28,7 @@ const user = new mongoose.Schema({
   },
   commuterType: {
     type: String,
-    enum: ["driver", "rider", "admin"],
+    enum: ["Driver", "Rider", "Admin"],
   },
   driverDetails: {
     licenseNumber: {

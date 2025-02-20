@@ -1,5 +1,5 @@
 import RiderOrderReq from "../model/RiderRequest.js";
-
+import AppError from "../utils/AppError.js";
 export const saveRiderOrderReq = async (newRiderOrderReq) => {
   //return value of asyn func is promise
   const riderOrderReq = new RiderOrderReq(newRiderOrderReq);
@@ -11,7 +11,6 @@ export const getRiderReq = async (rider) => {
   const riderOrderReq = await RiderOrderReq.findOne({
     rider: rider,
   }).exec();
-
   return riderOrderReq;
 };
 
@@ -31,24 +30,6 @@ export const getRiderOrderDetails = async (rider) => {
 
   return riderOrderReq;
 };
-
-/* export const getDriverOrderNumberReq = async (id) => {
-    console.log("Querying for DriverOrderNumber with id:", id);
-
-    try {
-        const riderOrderReq = await RiderOrderReq.find({ DriverOrderNumber: Number(id) }).exec();
-        console.log("Query result:", riderOrderReq);
-
-        if (riderOrderReq.length === 0) {
-            console.log("No documents found matching the DriverOrderNumber:", id);
-        }
-
-        return riderOrderReq;
-    } catch (error) {
-        console.error("Error during database query:", error);
-        throw error; // Or handle the error as needed
-    }
-}; */
 
 export const removeRiderOrderReq = async (id) => {
   //return value of asyn func is promise

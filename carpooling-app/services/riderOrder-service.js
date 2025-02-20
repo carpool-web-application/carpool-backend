@@ -19,7 +19,7 @@ export const saveRiderOrder = async (newRiderOrder) => {
 
 export const getRiderOrder = async (id) => {
   //return value of asyn func is promise
-  const riderOrder = await RiderOrder.findOne({ _id: id })
+  const riderOrder = await RiderOrder.findOne({ rider: id })
     .populate("rider", "UserId userName userName PhoneNumber averageRating")
     .exec();
   return riderOrder;
@@ -42,7 +42,7 @@ export const updateDetails = async (id, updatedriderOrder) => {
   //return value of asyn func is promise
   //const reminderwithdate  = {...updatedReminder, lastModifiedDate: Date.now()}
   const riderOrderNew = { ...updatedriderOrder };
-  const riderOrder = RiderOrder.findOneAndUpdate({ rider: id }, riderOrderNew, {
+  const riderOrder = RiderOrder.findOneAndUpdate(id, riderOrderNew, {
     new: true,
   }).exec();
   return riderOrder;

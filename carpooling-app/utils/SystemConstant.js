@@ -1,10 +1,8 @@
 const roleAccess = {
-  driverAccess: ["Admin", "driver"],
-  riderAccess: ["Admin", "rider"],
-  commonAccess: ["Admin", "driver", "rider"],
+  driverAccess: ["Admin", "Driver"],
+  riderAccess: ["Admin", "Rider"],
+  commonAccess: ["Admin", "Driver", "Rider"],
   adminAccess: ["Admin"],
 };
 
-export default {
-  roleAccess,
-};
+export default roleAccess;

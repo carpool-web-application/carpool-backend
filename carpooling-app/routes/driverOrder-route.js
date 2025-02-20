@@ -1,30 +1,23 @@
 import express from "express";
-import * as riderOrderController from "../controller/riderOrder-controller.js";
+import * as driverOrderController from "../controller/driverOrder-controller.js";
 import * as authenticateUser from "../utils/authenticationUtils.js";
 import roleAccess from "../utils/SystemConstant.js";
 const router = express.Router();
 
-//route the methods with controller logic
 router
   .route("/")
   .post(
     authenticateUser.verifyJWT,
     authenticateUser.validateUser(roleAccess.commonAccess),
-    riderOrderController.post
-  )
-  .get(
-    authenticateUser.verifyJWT,
-    authenticateUser.validateUser(roleAccess.commonAccess),
-    riderOrderController.index
+    driverOrderController.post
   );
 
-//route the paramterized methods with controller logic
 router
-  .route("/:UserId/rider")
+  .route("/:UserId/driver")
   .get(
     authenticateUser.verifyJWT,
     authenticateUser.validateUser(roleAccess.commonAccess),
-    riderOrderController.find
+    driverOrderController.find
   );
 
 router
@@ -32,12 +25,12 @@ router
   .delete(
     authenticateUser.verifyJWT,
     authenticateUser.validateUser(roleAccess.commonAccess),
-    riderOrderController.deleteRiderOrder
+    driverOrderController.deleteDriverOrder
   )
   .patch(
     authenticateUser.verifyJWT,
     authenticateUser.validateUser(roleAccess.commonAccess),
-    riderOrderController.updateRiderOrder
+    driverOrderController.updateDriverOrder
   );
 
 export default router;

@@ -25,7 +25,7 @@ export const index = catchAsyncFunction(async (request, response) => {
 
 //define the method for riderOrder searching
 export const find = catchAsyncFunction(async (request, response) => {
-  const id = request.params.RiderId;
+  const id = request.params.UserId;
   const riderOrder = await getRiderOrder(id);
   setSuccessfulResponse(riderOrder, response);
 });
@@ -43,7 +43,7 @@ export const findbyOrderNumber = async (request, response) => {
 //define the method for reminder deletion
 export const deleteRiderOrder = async (request, response) => {
   try {
-    const id = request.params.DriverId;
+    const id = request.params.orderId;
     const riderOrder = await removeRiderOrder(id);
     setSuccessfulResponse(riderOrder, response);
   } catch (err) {
@@ -54,7 +54,7 @@ export const deleteRiderOrder = async (request, response) => {
 //define the method for reminder updation
 export const updateRiderOrder = async (request, response) => {
   try {
-    const id = request.params.DriverId;
+    const id = request.params.orderId;
     const body = request.body;
     const riderOrder = await updateDetails(id, body);
 

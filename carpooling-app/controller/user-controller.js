@@ -14,6 +14,7 @@ import { catchAsyncFunction } from "../utils/catchAsyncFunction.js";
 export const post = catchAsyncFunction(async (request, response) => {
   const newUser = request.body;
   const savedUser = await saveUser(newUser);
+
   setSuccessfullResponse(savedUser, response);
 });
 
@@ -57,7 +58,7 @@ export const deleteUser = catchAsyncFunction(async (request, response) => {
 
 //define the method for reminder updation
 export const updatuser = catchAsyncFunction(async (request, response) => {
-  const id = request.params.id;
+  const id = request.params.userId;
   const body = request.body;
   const user = await updateDetails(id, body);
 

@@ -1,20 +1,39 @@
 import express from "express";
 import * as userAuthController from "../controller/user-controller.js";
-import { generateJWT } from "../utils/authenticationUtils.js";
-
+import * as authenticateUser from "../utils/authenticationUtils.js";
+import roleAccess from "../utils/SystemConstant.js";
 const router = express.Router();
 
 //route the methods with controller logic
 router.route("/signup").post(userAuthController.post);
 
-router.route("/login").post(userAuthController.login, generateJWT);
+router
+  .route("/login")
+  .post(userAuthController.login, authenticateUser.generateJWT);
 
 //route the paramterized methods with controller logic
 router
-  .route("/:riderId")
-  .get(userAuthController.findbyUserName)
-  .delete(userAuthController.deleteUser)
-  .patch(userAuthController.updatuser)
-  .put(userAuthController.updatuser);
+  .route("/:userId")
+  .get(
+    /* 
+    authenticateUser.verifyJWT,
+    authenticateUser.validateUser(roleAccess.commonAccess), */
+    userAuthController.findbyUserName
+  )
+  .delete(
+    authenticateUser.verifyJWT,
+    authenticateUser.validateUser(roleAccess.commonAccess),
+    userAuthController.deleteUser
+  )
+  .patch(
+    authenticateUser.verifyJWT,
+    authenticateUser.validateUser(roleAccess.commonAccess),
+    userAuthController.updatuser
+  )
+  .put(
+    authenticateUser.verifyJWT,
+    authenticateUser.validateUser(roleAccess.commonAccess),
+    userAuthController.updatuser
+  );
 
 export default router;

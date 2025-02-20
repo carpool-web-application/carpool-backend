@@ -1,16 +1,27 @@
 import express from "express";
 import * as riderController from "../controller/rider-controller.js";
-import { verifyJWT } from "../utils/authenticationUtils.js";
-
+import * as authenticateUser from "../utils/authenticationUtils.js";
+import roleAccess from "../utils/SystemConstant.js";
 const router = express.Router();
 
 //route the methods with controller logic
-router.route("/").post(riderController.post).get(riderController.index);
+router
+  .route("/")
+  //.post(riderController.post) //removed due to not required
+  .get(
+    authenticateUser.verifyJWT,
+    authenticateUser.validateUser(roleAccess.adminAccess),
+    riderController.index
+  ); //fetch all rider/commuter
 
 //route the paramterized methods with controller logic
 router
   .route("/:RiderUserName")
-  .get(verifyJWT, riderController.find)
+  .get(
+    authenticateUser.verifyJWT,
+    authenticateUser.validateUser(roleAccess.riderAccess),
+    riderController.find
+  )
   .delete(riderController.deleteRider)
   .patch(riderController.updateRider)
   .put(riderController.updateRider);

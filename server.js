@@ -11,6 +11,9 @@ const server = http.createServer(app);
 // Creating the port
 const port = process.env.PORT || 5000; // Default to 5000 if PORT is not set
 
+// Creating the port
+const port = process.env.PORT || 5000; // Default to 5000 if PORT is not set
+
 // Initialize socket.io
 const io = new Server(server, {
   cors: {

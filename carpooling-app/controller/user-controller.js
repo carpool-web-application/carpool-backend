@@ -10,11 +10,12 @@ import {
 import setSuccessfullResponse from "../utils/successResponse.js";
 import AppError from "../utils/AppError.js";
 import { catchAsyncFunction } from "../utils/catchAsyncFunction.js";
+import { nextTick } from "process";
 
-export const post = catchAsyncFunction(async (request, response) => {
+export const post = catchAsyncFunction(async (request, response, next) => {
   const newUser = request.body;
-  const savedUser = await saveUser(newUser);
 
+  const savedUser = await saveUser(newUser, next);
   setSuccessfullResponse(savedUser, response);
 });
 

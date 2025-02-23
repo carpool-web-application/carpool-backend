@@ -5,16 +5,6 @@ export const saveDriverOrder = async (newDriverOrder) => {
   const driverOrder = new DriverOrder({
     newDriverOrder,
   }).save();
-
-  //logic to add themselves to the order of the driver
-  const updateDriverOrder = await DriverOrder.find({
-    ride: driverOrder.ride,
-    status: { $eq: "ongoing" },
-  }).exec();
-  const updateOrder = await updateDriverOrder.driverOrders.push(
-    driverOrder._id
-  );
-  await updateOrder.save();
   return driverOrder;
 };
 

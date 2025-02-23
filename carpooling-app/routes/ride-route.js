@@ -30,4 +30,12 @@ router
     rideController.updateRide
   );
 
+router
+  .route("/:rideId/onGoingRide")
+  .get(
+    authenticateUser.verifyJWT,
+    authenticateUser.validateUser(roleAccess.commonAccess),
+    rideController.onGoingRide
+  );
+
 export default router;

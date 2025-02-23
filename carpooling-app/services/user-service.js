@@ -1,15 +1,18 @@
 import userSchema from "../model/user.js";
 import AppError from "../utils/AppError.js";
 
-export const saveUser = async (newUser) => {
+export const saveUser = async (newUser, next) => {
   //return value of asyn func is promise
-  const fetchUser = await userSchema.findOne({ userId: newUser.UserId }).exec();
+  const fetchUser = await userSchema
+    .findOne({ userName: newUser.userName })
+    .exec();
   if (fetchUser) {
     return next(new AppError("User already exists", 401));
   }
 
   const user = new userSchema(newUser);
-  return user.save();
+  const saveUser = await user.save();
+  return saveUser;
 };
 
 export const getuser = async (id) => {
@@ -67,7 +70,6 @@ export const updateDetails = async (id, updateduser) => {
       runValidators: true,
     })
     .exec();
-  console.log(user);
   return user;
 };
 

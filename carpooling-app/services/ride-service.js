@@ -1,5 +1,4 @@
 import Ride from "../model/ride.js";
-import DriverOrder from "../model/driverOrder.js";
 
 export const saveRide = async (ridePayload) => {
   //return value of asyn func is promise
@@ -9,17 +8,25 @@ export const saveRide = async (ridePayload) => {
 
 export const fetchRides = async (ridePayload) => {
   //return value of asyn func is promise
-  const ride = await ride.find().exec();
+  const ride = await Ride.find().exec();
+  return ride;
+};
+
+export const fetchOngoingRide = async (driver) => {
+  const ride = await Ride.findOne({
+    driver: driver,
+    status: { $ne: "ongoing" },
+  }).exec();
   return ride;
 };
 
 export const fetchDriverRides = async (rideId) => {
-  const ride = await ride.find({ rideId: rideId }).populate("driver");
+  const ride = await Ride.find({ rideId: rideId }).populate("driver");
   return ride;
 };
 
 export const updateRideDetails = async (rideParameter, requestPayload) => {
-  const ride = await ride.findOneAndUpdate(
+  const ride = await Ride.findOneAndUpdate(
     { riderId: rideParameter },
     { $set: { requestPayload } }
   );

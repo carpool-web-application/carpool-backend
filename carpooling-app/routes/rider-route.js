@@ -19,7 +19,7 @@ router
   .route("/:RiderUserName")
   .get(
     authenticateUser.verifyJWT,
-    authenticateUser.validateUser(roleAccess.riderAccess),
+    authenticateUser.validateUser(roleAccess.commonAccess),
     riderController.find
   )
   .delete(riderController.deleteRider)

@@ -9,6 +9,7 @@ export const saveRider = async (newRider) => {
 export const getRider = async (id) => {
   //return value of asyn func is promise
   const rider = user.findOne({ UserId: id }).exec();
+
   return rider;
 };
 export const removeRider = async (id) => {

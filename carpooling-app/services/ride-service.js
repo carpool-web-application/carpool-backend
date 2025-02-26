@@ -25,11 +25,16 @@ export const fetchDriverRides = async (rideId) => {
   return ride;
 };
 
+export const getDriverRide = async (rideId) => {
+  const ride = await Ride.find({ driver: rideId }).populate("driver");
+  console.log(ride);
+  return ride;
+};
+
 export const updateRideDetails = async (rideParameter, requestPayload) => {
   const ride = await Ride.findOneAndUpdate(
-    { riderId: rideParameter },
-    { $set: { requestPayload } }
+    { rideId: rideParameter },
+    { $set: requestPayload }
   );
-
   return ride;
 };

@@ -31,7 +31,7 @@ export const index = catchAsyncFunction(async (request, response) => {
 
 //define the method for rider searching
 export const find = catchAsyncFunction(async (request, response) => {
-  const id = request.params.DriverUserName;
+  const id = request.params.driverId;
   const driver = await getDriver(id);
   setSuccessfullResponse(driver, response);
 });

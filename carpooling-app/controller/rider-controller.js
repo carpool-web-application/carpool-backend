@@ -26,6 +26,7 @@ export const index = catchAsyncFunction(async (request, response) => {
 //define the method for rider searching
 export const find = catchAsyncFunction(async (request, response) => {
   const id = request.params.RiderUserName;
+  console.log(id);
   const rider = await getRider(id);
   setSuccessfullResponse(rider, response);
 });

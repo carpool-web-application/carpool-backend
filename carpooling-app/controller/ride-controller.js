@@ -5,6 +5,7 @@ import {
   fetchDriverRides,
   updateRideDetails,
   fetchOngoingRide,
+  getDriverRide,
 } from "../services/ride-service.js";
 import setSuccessfullResponse from "../utils/successResponse.js";
 
@@ -26,6 +27,12 @@ const fetchRide = catchAsyncFunction(async (request, response) => {
   setSuccessfullResponse(ride, response);
 });
 
+const fetchDriverRide = catchAsyncFunction(async (request, response) => {
+  const rideParameter = request.params.rideId;
+  const ride = await getDriverRide(rideParameter);
+  setSuccessfullResponse(ride, response);
+});
+
 const onGoingRide = catchAsyncFunction(async (request, response) => {
   const rideParameter = request.params.rideId;
   const ride = await fetchOngoingRide(rideParameter);
@@ -34,7 +41,7 @@ const onGoingRide = catchAsyncFunction(async (request, response) => {
 
 const updateRide = catchAsyncFunction(async (request, response) => {
   const rideParameter = request.params.rideId;
-  const ride = await updateRideDetails(rideParameter, requestPayload);
+  const ride = await updateRideDetails(rideParameter, request.body);
   setSuccessfullResponse(ride, response);
 });
 
@@ -44,4 +51,5 @@ export default {
   fetchRide,
   updateRide,
   onGoingRide,
+  fetchDriverRide,
 };

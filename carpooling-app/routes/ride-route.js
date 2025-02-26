@@ -24,7 +24,7 @@ router
     authenticateUser.validateUser(roleAccess.driverAccess),
     rideController.fetchRide
   )
-  .patch(
+  .put(
     authenticateUser.verifyJWT,
     authenticateUser.validateUser(roleAccess.driverAccess),
     rideController.updateRide
@@ -36,6 +36,14 @@ router
     authenticateUser.verifyJWT,
     authenticateUser.validateUser(roleAccess.commonAccess),
     rideController.onGoingRide
+  );
+
+router
+  .route("/:rideId/fetchRides")
+  .get(
+    authenticateUser.verifyJWT,
+    authenticateUser.validateUser(roleAccess.commonAccess),
+    rideController.fetchDriverRide
   );
 
 export default router;

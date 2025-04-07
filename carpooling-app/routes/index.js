@@ -5,7 +5,10 @@ import riderOrderRouter from "./riderOrder-route.js";
 import rides from "./ride-route.js";
 import user from "./user-route.js";
 import riderReq from "./riderReq-route.js";
+import notificationRouter from "./notification-route.js";
+
 import { globalErrorHandler } from "../controller/globalErrorHandler.js";
+
 import AppError from "../utils/AppError.js";
 
 const route = (app) => {
@@ -21,6 +24,7 @@ const route = (app) => {
   router.use("/user", user);
   router.use("/rideRequest", riderReq); //remained the riderRequest to the rideRequest
   router.use("/orders", riderOrderRouter); //included orders
+  router.use("/notifications", notificationRouter);
 
   //attaching thepath to the router
   app.use("/carpool/v1", router);

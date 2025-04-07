@@ -18,6 +18,11 @@ const riderReqSchema = new mongoose.Schema(
       ref: "User",
       required: true,
     },
+    driver: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+    },
     StartingLocation: {
       type: String,
       default: null, // required: 'Starting Location is required.'

@@ -8,7 +8,8 @@ import {
   searchRiderOrderReq,
   getDriverOrderNumberReq,
   getRiderOrderDetails,
-  approveRideRequest,
+  requestDecision,
+  getPendingRide,
 } from "../services/riderOrderReq-service.js";
 //reminderService.save();
 import { io } from "../../server.js";
@@ -35,6 +36,12 @@ export const index = catchAsyncFunction(async (request, response) => {
 export const find = catchAsyncFunction(async (request, response) => {
   const RiderId = request.params.UserId;
   const riderReq = await getRiderReq(RiderId);
+  setSuccessfullResponse(riderReq, response);
+});
+
+export const findPendingRide = catchAsyncFunction(async (request, response) => {
+  const RiderId = request.params.RequestId;
+  const riderReq = await getPendingRide(RiderId);
   setSuccessfullResponse(riderReq, response);
 });
 
@@ -75,7 +82,7 @@ export const updateRiderOrder = catchAsyncFunction(
 export const updateRideRequest = catchAsyncFunction(
   async (request, response) => {
     const requestPayload = request.body;
-    const rideRequest = await approveRideRequest(
+    const rideRequest = await requestDecision(
       request.params.RideRequestId,
       requestPayload
     );

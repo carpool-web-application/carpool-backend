@@ -14,6 +14,15 @@ export const getRiderReq = async (rider) => {
   return riderOrderReq;
 };
 
+export const getPendingRide = async (rider) => {
+  //return value of asyn func is promise
+  const riderOrderReq = await RiderOrderReq.find({
+    driver: rider,
+    CommuteStatus: "pending",
+  }).exec();
+  return riderOrderReq;
+};
+
 export const getDriverOrderNumberReq = async (id) => {
   //return value of asyn func is promise
   const riderOrderReq = await RiderOrderReq.find({
@@ -52,18 +61,12 @@ export const updateDetails = async (id, updatedriderOrderReq) => {
 };
 
 //Creating update service which is called from controllers
-export const approveRideRequest = async (id, requestPayload) => {
+export const requestDecision = async (id, requestPayload) => {
   //return value of asyn func is promise
   //const reminderwithdate  = {...updatedReminder, lastModifiedDate: Date.now()}
-  const rideRequest = { ...requestPayload };
-  const riderOrderReq = await RiderOrderReq.updateOne(
+  const riderOrderReq = await RiderOrderReq.findOneAndUpdate(
     { RequestId: id },
-    {
-      $set: {
-        CommuteStatus: "approved",
-      },
-    },
-    { new: true }
+    { CommuteStatus: requestPayload.commuterStatus }
   ).exec();
   //const riderOrderReq =  RiderOrderReq.findOneAndUpdate({ RiderId: id } ,{ $push: { ratings: riderOrderReqNew.ratings } },riderOrderReqNew,{new: true}).exec();
   return riderOrderReq;

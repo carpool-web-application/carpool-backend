@@ -29,6 +29,11 @@ router
 
 router
   .route("/request/:RequestId")
+  .get(
+    authenticateUser.verifyJWT,
+    authenticateUser.validateUser(roleAccess.riderAccess),
+    riderController.findPendingRide
+  )
   .patch(
     authenticateUser.verifyJWT,
     authenticateUser.validateUser(roleAccess.riderAccess),

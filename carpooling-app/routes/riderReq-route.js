@@ -9,7 +9,7 @@ router
   .route("/")
   .post(
     authenticateUser.verifyJWT,
-    authenticateUser.validateUser(roleAccess.riderAccess),
+    authenticateUser.validateUser(roleAccess.commonAccess),
     riderController.post
   );
 
@@ -18,12 +18,12 @@ router
   .route("/:UserId")
   .get(
     authenticateUser.verifyJWT,
-    authenticateUser.validateUser(roleAccess.riderAccess),
+    authenticateUser.validateUser(roleAccess.commonAccess),
     riderController.find
   )
   .delete(
     authenticateUser.verifyJWT,
-    authenticateUser.validateUser(roleAccess.riderAccess),
+    authenticateUser.validateUser(roleAccess.commonAccess),
     riderController.deleteRiderOrder
   );
 
@@ -31,12 +31,12 @@ router
   .route("/request/:RequestId")
   .get(
     authenticateUser.verifyJWT,
-    authenticateUser.validateUser(roleAccess.riderAccess),
+    authenticateUser.validateUser(roleAccess.commonAccess),
     riderController.findPendingRide
   )
   .patch(
     authenticateUser.verifyJWT,
-    authenticateUser.validateUser(roleAccess.riderAccess),
+    authenticateUser.validateUser(roleAccess.commonAccess),
     riderController.updateRideRequest
   );
 

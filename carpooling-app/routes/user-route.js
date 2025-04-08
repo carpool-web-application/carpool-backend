@@ -14,12 +14,7 @@ router
 //route the paramterized methods with controller logic
 router
   .route("/:userId")
-  .get(
-    /* 
-    authenticateUser.verifyJWT,
-    authenticateUser.validateUser(roleAccess.commonAccess), */
-    userAuthController.findbyUserName
-  )
+  .get(userAuthController.findbyUserName)
   .delete(
     authenticateUser.verifyJWT,
     authenticateUser.validateUser(roleAccess.commonAccess),

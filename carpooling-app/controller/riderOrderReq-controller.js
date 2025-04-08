@@ -18,6 +18,12 @@ import { io } from "../../server.js";
 export const post = catchAsyncFunction(async (request, response) => {
   const newRiderOrder = request.body;
   const savedRiderOrder = await saveRiderOrderReq(newRiderOrder);
+
+  if (!savedRiderOrder) {
+    return next(
+      new AppError("The rider already requested for the same ride", 404)
+    );
+  }
   io.emit("approval_notification", {
     orderNumber: savedRiderOrder.DriverOrderNumber,
     riderId: savedRiderOrder.RiderId,

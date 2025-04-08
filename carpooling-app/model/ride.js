@@ -7,7 +7,7 @@ const rideSchema = new mongoose.Schema(
       default: uuidv4, //required: 'The title field is required.'
     },
     driver: {
-      type: String,
+      type: mongoose.Schema.Types.ObjectId,
       ref: "userAuths",
       required: true,
     },

@@ -1,9 +1,26 @@
+import mongoose from "mongoose";
 import RiderOrderReq from "../model/RiderRequest.js";
 import AppError from "../utils/AppError.js";
 export const saveRiderOrderReq = async (newRiderOrderReq) => {
   //return value of asyn func is promise
-  const riderOrderReq = new RiderOrderReq(newRiderOrderReq);
-  return riderOrderReq.save();
+
+  //check if user is requesting for the same driver
+  const findRequestedRide = await RiderOrderReq.find({
+    rider: newRiderOrderReq.riderId,
+    driver: newRiderOrderReq.driverId,
+    CommuteStatus: "pending",
+  }).exec();
+
+  if (!findRequestedRide) {
+    const riderOrderReq = new RiderOrderReq({
+      ...newRiderOrderReq,
+      rider: new mongoose.Types.ObjectId(newRiderOrderReq.riderId),
+      driver: new mongoose.Types.ObjectId(newRiderOrderReq.driverId),
+    });
+    return riderOrderReq.save();
+  }
+
+  return null;
 };
 
 export const getRiderReq = async (rider) => {
@@ -19,7 +36,10 @@ export const getPendingRide = async (rider) => {
   const riderOrderReq = await RiderOrderReq.find({
     driver: rider,
     CommuteStatus: "pending",
-  }).exec();
+  })
+    .populate("driver")
+    .populate("rider")
+    .exec();
   return riderOrderReq;
 };
 

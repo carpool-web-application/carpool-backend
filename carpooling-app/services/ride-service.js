@@ -1,14 +1,18 @@
 import Ride from "../model/ride.js";
+import mongoose from "mongoose";
 
 export const saveRide = async (ridePayload) => {
   //return value of asyn func is promise
-  const ride = new Ride(ridePayload);
+  const ride = new Ride({
+    ...ridePayload,
+    driver: new mongoose.Types.ObjectId(ridePayload.driver),
+  });
   return ride.save();
 };
 
 export const fetchRides = async (ridePayload) => {
   //return value of asyn func is promise
-  const ride = await Ride.find().exec();
+  const ride = await Ride.find({ status: "available" }).exec();
   return ride;
 };
 

@@ -11,11 +11,12 @@ import {
   requestDecision,
   getPendingRide,
 } from "../services/riderOrderReq-service.js";
+import AppError from "../utils/AppError.js";
 //reminderService.save();
 import { io } from "../../server.js";
 
 //define the method for reminder creation
-export const post = catchAsyncFunction(async (request, response) => {
+export const post = catchAsyncFunction(async (request, response, next) => {
   const newRiderOrder = request.body;
   const savedRiderOrder = await saveRiderOrderReq(newRiderOrder);
 

@@ -83,6 +83,6 @@ user.methods.comparePassword = function (candidatePassword, callback) {
   });
 };
 
-const userSchema = mongoose.model("userAuths", user);
+const userSchema = mongoose.model("user", user);
 
 export default userSchema;

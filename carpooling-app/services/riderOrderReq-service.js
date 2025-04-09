@@ -1,21 +1,21 @@
 import mongoose from "mongoose";
 import RiderOrderReq from "../model/RiderRequest.js";
-import AppError from "../utils/AppError.js";
 export const saveRiderOrderReq = async (newRiderOrderReq) => {
   //return value of asyn func is promise
-
+  console.log(newRiderOrderReq);
   //check if user is requesting for the same driver
   const findRequestedRide = await RiderOrderReq.find({
-    rider: newRiderOrderReq.riderId,
-    driver: newRiderOrderReq.driverId,
+    rider: newRiderOrderReq.rider,
+    driver: newRiderOrderReq.driver,
     CommuteStatus: "pending",
   }).exec();
-
-  if (!findRequestedRide) {
+  console.log(findRequestedRide);
+  if (findRequestedRide.length === 0) {
     const riderOrderReq = new RiderOrderReq({
       ...newRiderOrderReq,
-      rider: new mongoose.Types.ObjectId(newRiderOrderReq.riderId),
-      driver: new mongoose.Types.ObjectId(newRiderOrderReq.driverId),
+      rider: new mongoose.Types.ObjectId(newRiderOrderReq.rider),
+      driver: new mongoose.Types.ObjectId(newRiderOrderReq.driver),
+      ride: new mongoose.Types.ObjectId(newRiderOrderReq.ride),
     });
     return riderOrderReq.save();
   }

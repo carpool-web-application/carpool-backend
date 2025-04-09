@@ -19,7 +19,7 @@ export const fetchRides = async (ridePayload) => {
 export const fetchOngoingRide = async (driver) => {
   const ride = await Ride.findOne({
     driver: driver,
-    status: { $ne: "ongoing" },
+    status: { $eq: "available" },
   }).exec();
   return ride;
 };

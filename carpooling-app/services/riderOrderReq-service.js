@@ -37,8 +37,24 @@ export const getPendingRide = async (rider) => {
     driver: rider,
     CommuteStatus: "pending",
   })
-    .populate("driver")
-    .populate("rider")
+    .populate("driver", "-userPassword -driverDetails")
+    .populate("rider", "-userPassword -driverDetails")
+    .exec();
+  return riderOrderReq;
+};
+
+export const getRides = async (queryParams) => {
+  //return value of asyn func is promise
+  const query = {};
+  if (queryParams.driver) {
+    query.driver = queryParams.driver;
+  }
+  if (queryParams.CommuteStatus) {
+    query.CommuteStatus = queryParams.CommuteStatus;
+  }
+  const riderOrderReq = await RiderOrderReq.find(query)
+    .populate("driver", "-userPassword -driverDetails")
+    .populate("rider", "-userPassword -driverDetails")
     .exec();
   return riderOrderReq;
 };

@@ -11,6 +11,11 @@ router
     authenticateUser.verifyJWT,
     authenticateUser.validateUser(roleAccess.commonAccess),
     riderController.post
+  )
+  .get(
+    authenticateUser.verifyJWT,
+    authenticateUser.validateUser(roleAccess.commonAccess),
+    riderController.fetchRides
   );
 
 //route the paramterized methods with controller logic

@@ -10,6 +10,7 @@ import {
   getRiderOrderDetails,
   requestDecision,
   getPendingRide,
+  getRides,
 } from "../services/riderOrderReq-service.js";
 import AppError from "../utils/AppError.js";
 //reminderService.save();
@@ -43,6 +44,12 @@ export const index = catchAsyncFunction(async (request, response) => {
 export const find = catchAsyncFunction(async (request, response) => {
   const RiderId = request.params.UserId;
   const riderReq = await getRiderReq(RiderId);
+  setSuccessfullResponse(riderReq, response);
+});
+
+export const fetchRides = catchAsyncFunction(async (request, response) => {
+  const query = request.query;
+  const riderReq = await getRides(query);
   setSuccessfullResponse(riderReq, response);
 });
 

@@ -20,7 +20,7 @@ export const post = catchAsyncFunction(async (request, response, next) => {
 
   const savedUser = await saveUser(newUser, next);
   if (!savedUser) {
-    return next(new AppError(404, "User is not created"));
+    return next(new AppError("User is not created", 404));
   }
 
   const sendNotification = await sendEmail(
@@ -56,18 +56,22 @@ export const passwordResetLink = catchAsyncFunction(
   }
 );
 
-export const passwordReset = catchAsyncFunction(async (request, response) => {
-  const body = request.body;
-  const users = await resetPassword(body);
-
-  setSuccessfullResponse(users, response);
-});
+export const passwordReset = catchAsyncFunction(
+  async (request, response, next) => {
+    const body = request.body;
+    const users = await resetPassword(body);
+    if (!users) {
+      return next(new AppError("User password reset expired", 404));
+    }
+    setSuccessfullResponse(users, response);
+  }
+);
 
 export const login = catchAsyncFunction(async (request, response, next) => {
   const body = request.body;
   const user = await getuserDetails(body);
   if (!user) {
-    return next(new AppError(401, "User not found or password incorrect"));
+    return next(new AppError("User not found or password incorrect", 401));
     //return response.status(401).send("User not found or password incorrect"); removed it for common error
   }
   request.body = user;

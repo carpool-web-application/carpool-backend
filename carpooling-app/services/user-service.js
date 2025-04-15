@@ -59,17 +59,17 @@ export const getuserDetails = async (body) => {
 export const resetPassword = async (body) => {
   const user = await userSchema
     .findOne({
-      resetPasswordToken: body.resetPasswordToken /* 
-      resetPasswordExpires: { $gt: Date.now() }, */,
+      resetPasswordToken: body.resetPasswordToken,
+      resetPasswordExpires: { $gt: Date.now() },
     })
     .exec();
+  console.log(user);
   if (!user) {
     return null; // Token not found or expired
   }
 
   user.userPassword = body.userPassword; // new raw password
-  user.resetPasswordToken = undefined;
-  user.resetPasswordExpires = undefined;
+  user.resetPasswordExpires = Date.now() - 1000;
 
   await user.save(); // This will trigger the pre-save hook to hash the password
 
@@ -92,13 +92,11 @@ export const removeuser = async (id) => {
 export const resetLink = async (body) => {
   //return value of asyn func is promise
   const findUser = await userSchema
-    .findOne({ userEmail: body.userEmail })
+    .findOne({
+      userEmail: body.userEmail,
+    })
     .exec();
   if (!findUser) {
-    return null;
-  }
-
-  if (!(findUser.resetPasswordExpires >= Date.now())) {
     return null;
   }
 

@@ -7,6 +7,9 @@ const router = express.Router();
 //route the methods with controller logic
 router.route("/signup").post(userAuthController.post);
 
+router.route("/forgotPassword").post(userAuthController.passwordResetLink);
+router.route("/resetPassword").post(userAuthController.passwordReset);
+
 router
   .route("/login")
   .post(userAuthController.login, authenticateUser.generateJWT);

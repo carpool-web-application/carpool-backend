@@ -1,23 +1,32 @@
-import { createTransport } from "nodemailer";
+import dotenv from "dotenv";
+import nodemailer from "nodemailer";
 
+dotenv.config();
+
+// Transporter setup using Gmail
 const transporter = nodemailer.createTransport({
-  host: "smtp.ethereal.email",
-  port: 587,
-  secure: false, // true for port 465, false for other ports
+  service: "gmail", // correct way to use Gmail with nodemailer
   auth: {
-    user: "maddison53@ethereal.email",
-    pass: "jn7jnAPss4f63QBp6D",
+    user: process.env.gmailUser,
+    pass: process.env.gmailPassword,
   },
 });
 
-const sendEmail = async () => {
-  return await transporter.sendMail({
-    from: '"Maddison Foo Koch 👻" <maddison53@ethereal.email>', // sender address
-    to: "bar@example.com, baz@example.com", // list of receivers
-    subject: "Hello ✔", // Subject line
-    text: "Hello world?", // plain text body
-    html: "<b>Hello world?</b>", // html body
-  });
+const sendEmail = async (email, subject, message) => {
+  try {
+    const info = await transporter.sendMail({
+      from: `${process.env.gmailUser}>`, // sender email
+      to: `${email}`, // receivers
+      subject: `${subject}`,
+      html: `${message}`,
+    });
+
+    console.log("Message sent: %s", info.messageId);
+    return info;
+  } catch (error) {
+    console.error("Error sending email:", error);
+    throw error;
+  }
 };
 
-export default {};
+export default sendEmail;

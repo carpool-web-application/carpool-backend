@@ -85,9 +85,10 @@ user.pre("save", function (next) {
 });
 
 user.methods.comparePassword = function (candidatePassword, callback) {
+  console.log(this.userPassword);
   bcrypt.compare(candidatePassword, this.userPassword, (err, hash) => {
-    if (err) return callback(err);
-    callback(null, hash);
+    console.log(err, hash);
+    return callback(err, hash);
   });
 };
 

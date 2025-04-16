@@ -71,9 +71,7 @@ export const resetPassword = async (body) => {
   user.userPassword = body.userPassword; // new raw password
   user.resetPasswordExpires = Date.now() - 1000;
 
-  await user.save(); // This will trigger the pre-save hook to hash the password
-
-  console.log("Password has been reset successfully.");
+  await user.save();
 
   await sendEmail(
     user.userEmail,

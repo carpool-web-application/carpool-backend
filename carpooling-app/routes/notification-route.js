@@ -1,48 +1,41 @@
 import express from "express";
-import * as riderController from "../controller/riderOrderReq-controller.js";
+import notificationController from "../controller/notification-controller.js";
 import * as authenticateUser from "../utils/authenticationUtils.js";
 import roleAccess from "../utils/SystemConstant.js";
 const router = express.Router();
 
-//route the methods with controller logic
 router
   .route("/")
+  .get(
+    authenticateUser.verifyJWT,
+    authenticateUser.validateUser(roleAccess.commonAccess),
+    notificationController.getAllNotifications
+  )
   .post(
     authenticateUser.verifyJWT,
     authenticateUser.validateUser(roleAccess.commonAccess),
-    riderController.post
-  )
-  .get(
-    authenticateUser.verifyJWT,
-    authenticateUser.validateUser(roleAccess.commonAccess),
-    riderController.fetchRides
-  );
-
-//route the paramterized methods with controller logic
-router
-  .route("/:UserId")
-  .get(
-    authenticateUser.verifyJWT,
-    authenticateUser.validateUser(roleAccess.commonAccess),
-    riderController.find
-  )
-  .delete(
-    authenticateUser.verifyJWT,
-    authenticateUser.validateUser(roleAccess.commonAccess),
-    riderController.deleteRiderOrder
+    notificationController.createNotification
   );
 
 router
-  .route("/request/:RequestId")
+  .route("/:notificationId")
   .get(
     authenticateUser.verifyJWT,
     authenticateUser.validateUser(roleAccess.commonAccess),
-    riderController.findPendingRide
+    notificationController.getNotification
   )
   .patch(
     authenticateUser.verifyJWT,
     authenticateUser.validateUser(roleAccess.commonAccess),
-    riderController.updateRideRequest
+    notificationController.updateNotification
+  );
+
+router
+  .route("./:userId")
+  .get(
+    authenticateUser.verifyJWT,
+    authenticateUser.validateUser(roleAccess.commonAccess),
+    notificationController.getUserNotification
   );
 
 export default router;

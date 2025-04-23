@@ -10,12 +10,12 @@ const riderOrderSchema = new mongoose.Schema(
     },
     rider: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "userAuths",
+      ref: "user",
       required: true,
     },
     driver: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "userAuths",
+      ref: "user",
       required: true,
     },
     fare: {

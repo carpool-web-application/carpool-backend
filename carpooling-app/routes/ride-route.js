@@ -30,20 +30,20 @@ router
     rideController.updateRide
   );
 
-router
+/* router
   .route("/:rideId/onGoingRide")
   .get(
     authenticateUser.verifyJWT,
     authenticateUser.validateUser(roleAccess.commonAccess),
     rideController.onGoingRide
-  );
+  ); */
 
-router
+/* router
   .route("/:rideId/fetchRides")
   .get(
     authenticateUser.verifyJWT,
     authenticateUser.validateUser(roleAccess.commonAccess),
     rideController.fetchDriverRide
-  );
+  ); */
 
 export default router;

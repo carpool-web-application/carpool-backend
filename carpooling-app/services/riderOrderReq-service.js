@@ -1,9 +1,26 @@
+import mongoose from "mongoose";
 import RiderOrderReq from "../model/RiderRequest.js";
-import AppError from "../utils/AppError.js";
 export const saveRiderOrderReq = async (newRiderOrderReq) => {
   //return value of asyn func is promise
-  const riderOrderReq = new RiderOrderReq(newRiderOrderReq);
-  return riderOrderReq.save();
+  console.log(newRiderOrderReq);
+  //check if user is requesting for the same driver
+  const findRequestedRide = await RiderOrderReq.find({
+    rider: newRiderOrderReq.rider,
+    driver: newRiderOrderReq.driver,
+    CommuteStatus: "pending",
+  }).exec();
+  console.log(findRequestedRide);
+  if (findRequestedRide.length === 0) {
+    const riderOrderReq = new RiderOrderReq({
+      ...newRiderOrderReq,
+      rider: new mongoose.Types.ObjectId(newRiderOrderReq.rider),
+      driver: new mongoose.Types.ObjectId(newRiderOrderReq.driver),
+      ride: new mongoose.Types.ObjectId(newRiderOrderReq.ride),
+    });
+    return riderOrderReq.save();
+  }
+
+  return null;
 };
 
 export const getRiderReq = async (rider) => {
@@ -11,6 +28,34 @@ export const getRiderReq = async (rider) => {
   const riderOrderReq = await RiderOrderReq.findOne({
     rider: rider,
   }).exec();
+  return riderOrderReq;
+};
+
+export const getPendingRide = async (rider) => {
+  //return value of asyn func is promise
+  const riderOrderReq = await RiderOrderReq.find({
+    driver: rider,
+    CommuteStatus: "pending",
+  })
+    .populate("driver", "-userPassword -driverDetails")
+    .populate("rider", "-userPassword -driverDetails")
+    .exec();
+  return riderOrderReq;
+};
+
+export const getRides = async (queryParams) => {
+  //return value of asyn func is promise
+  const query = {};
+  if (queryParams.driver) {
+    query.driver = queryParams.driver;
+  }
+  if (queryParams.CommuteStatus) {
+    query.CommuteStatus = queryParams.CommuteStatus;
+  }
+  const riderOrderReq = await RiderOrderReq.find(query)
+    .populate("driver", "-userPassword -driverDetails")
+    .populate("rider", "-userPassword -driverDetails")
+    .exec();
   return riderOrderReq;
 };
 
@@ -52,18 +97,12 @@ export const updateDetails = async (id, updatedriderOrderReq) => {
 };
 
 //Creating update service which is called from controllers
-export const approveRideRequest = async (id, requestPayload) => {
+export const requestDecision = async (id, requestPayload) => {
   //return value of asyn func is promise
   //const reminderwithdate  = {...updatedReminder, lastModifiedDate: Date.now()}
-  const rideRequest = { ...requestPayload };
-  const riderOrderReq = await RiderOrderReq.updateOne(
+  const riderOrderReq = await RiderOrderReq.findOneAndUpdate(
     { RequestId: id },
-    {
-      $set: {
-        CommuteStatus: "approved",
-      },
-    },
-    { new: true }
+    { CommuteStatus: requestPayload.commuterStatus }
   ).exec();
   //const riderOrderReq =  RiderOrderReq.findOneAndUpdate({ RiderId: id } ,{ $push: { ratings: riderOrderReqNew.ratings } },riderOrderReqNew,{new: true}).exec();
   return riderOrderReq;

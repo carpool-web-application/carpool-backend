@@ -8,15 +8,24 @@ import {
   searchRiderOrderReq,
   getDriverOrderNumberReq,
   getRiderOrderDetails,
-  approveRideRequest,
+  requestDecision,
+  getPendingRide,
+  getRides,
 } from "../services/riderOrderReq-service.js";
+import AppError from "../utils/AppError.js";
 //reminderService.save();
 import { io } from "../../server.js";
 
 //define the method for reminder creation
-export const post = catchAsyncFunction(async (request, response) => {
+export const post = catchAsyncFunction(async (request, response, next) => {
   const newRiderOrder = request.body;
   const savedRiderOrder = await saveRiderOrderReq(newRiderOrder);
+
+  if (!savedRiderOrder) {
+    return next(
+      new AppError("The rider already requested for the same ride", 404)
+    );
+  }
   io.emit("approval_notification", {
     orderNumber: savedRiderOrder.DriverOrderNumber,
     riderId: savedRiderOrder.RiderId,
@@ -35,6 +44,18 @@ export const index = catchAsyncFunction(async (request, response) => {
 export const find = catchAsyncFunction(async (request, response) => {
   const RiderId = request.params.UserId;
   const riderReq = await getRiderReq(RiderId);
+  setSuccessfullResponse(riderReq, response);
+});
+
+export const fetchRides = catchAsyncFunction(async (request, response) => {
+  const query = request.query;
+  const riderReq = await getRides(query);
+  setSuccessfullResponse(riderReq, response);
+});
+
+export const findPendingRide = catchAsyncFunction(async (request, response) => {
+  const RiderId = request.params.RequestId;
+  const riderReq = await getPendingRide(RiderId);
   setSuccessfullResponse(riderReq, response);
 });
 
@@ -75,7 +96,7 @@ export const updateRiderOrder = catchAsyncFunction(
 export const updateRideRequest = catchAsyncFunction(
   async (request, response) => {
     const requestPayload = request.body;
-    const rideRequest = await approveRideRequest(
+    const rideRequest = await requestDecision(
       request.params.RideRequestId,
       requestPayload
     );

@@ -63,6 +63,14 @@ const user = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
+  resetPasswordToken: {
+    type: String,
+    default: null,
+  },
+  resetPasswordExpires: {
+    type: Date,
+    default: null,
+  },
 });
 
 user.pre("save", function (next) {
@@ -77,12 +85,13 @@ user.pre("save", function (next) {
 });
 
 user.methods.comparePassword = function (candidatePassword, callback) {
+  console.log(this.userPassword);
   bcrypt.compare(candidatePassword, this.userPassword, (err, hash) => {
-    if (err) return callback(err);
-    callback(null, hash);
+    console.log(err, hash);
+    return callback(err, hash);
   });
 };
 
-const userSchema = mongoose.model("userAuths", user);
+const userSchema = mongoose.model("user", user);
 
 export default userSchema;

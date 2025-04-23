@@ -11,12 +11,12 @@ const rating = new mongoose.Schema({
   },
   ratedUser: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "userAuths",
+    ref: "user",
     required: [true, "User Information is required"],
   },
   reviewer: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "userAuths",
+    ref: "user",
     required: [true, "Reviewer Information is required"],
   },
   rating: {

@@ -3,17 +3,19 @@ import DriverOrder from "../model/driverOrder.js";
 
 export const saveRiderOrder = async (newRiderOrder) => {
   //return value of asyn func is promise
-  const riderOrder = new RiderOrder({
-    newRiderOrder,
-  }).save();
+  const riderOrder = await new RiderOrder(newRiderOrder).save();
 
   //logic to add themselves to the order of the driver
-  const updateDriverOrder = await DriverOrder.find({
+  await DriverOrder.findOneAndUpdate({
     ride: riderOrder.ride,
     status: { $eq: "ongoing" },
+  }, {
+    $addToSet: { riderOrders: riderOrder._id },
+    $inc: {
+      totalFareCollected: riderOrder.fare,
+      totalSeatsFilled: riderOrder.seatsBooked,
+    },
   }).exec();
-  const updateOrder = await updateDriverOrder.riderOrders.push(riderOrder._id);
-  await updateOrder.save();
   return riderOrder;
 };
 
@@ -33,7 +35,7 @@ export const getDriverOrderNumberReq = async (id) => {
 
 export const removeRiderOrder = async (id) => {
   //return value of asyn func is promise
-  const riderOrder = RiderOrder.findOneAndDelete(id).exec();
+  const riderOrder = RiderOrder.findByIdAndDelete(id).exec();
   return riderOrder;
 };
 
@@ -42,8 +44,9 @@ export const updateDetails = async (id, updatedriderOrder) => {
   //return value of asyn func is promise
   //const reminderwithdate  = {...updatedReminder, lastModifiedDate: Date.now()}
   const riderOrderNew = { ...updatedriderOrder };
-  const riderOrder = RiderOrder.findOneAndUpdate(id, riderOrderNew, {
+  const riderOrder = RiderOrder.findByIdAndUpdate(id, riderOrderNew, {
     new: true,
+    runValidators: true,
   }).exec();
   return riderOrder;
 };

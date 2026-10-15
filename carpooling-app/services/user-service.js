@@ -3,13 +3,13 @@ import AppError from "../utils/AppError.js";
 import crypto from "crypto";
 import sendEmail from "../utils/notificationSetup.js";
 
-export const saveUser = async (newUser, next) => {
+export const saveUser = async (newUser) => {
   //return value of asyn func is promise
   const fetchUser = await userSchema
     .findOne({ userName: newUser.userName })
     .exec();
   if (fetchUser) {
-    return next(new AppError("User already exists", 401));
+    throw new AppError("User already exists", 409);
   }
 
   const user = new userSchema(newUser);
@@ -26,13 +26,18 @@ export const getuser = async (id) => {
 
 export const getuserName = async (id) => {
   //return value of asyn func is promise
-  const user = await userSchema.findOne({ userName: id }).exec();
+  const user = await userSchema
+    .findOne({ $or: [{ userName: id }, { UserId: id }] })
+    .exec();
   return user;
 };
 
 export const getuserDetails = async (body) => {
   //return value of asyn func is promise
-  const user = await userSchema.findOne({ userName: body.userName }).exec();
+  const user = await userSchema
+    .findOne({ userName: body.userName })
+    .select("+userPassword")
+    .exec();
   if (!user) {
     return null;
   }
@@ -57,21 +62,26 @@ export const getuserDetails = async (body) => {
 };
 
 export const resetPassword = async (body) => {
+  const resetPasswordToken = crypto
+    .createHash("sha256")
+    .update(body.resetPasswordToken)
+    .digest("hex");
   const user = await userSchema
     .findOne({
-      resetPasswordToken: body.resetPasswordToken,
+      resetPasswordToken,
       resetPasswordExpires: { $gt: Date.now() },
     })
+    .select("+resetPasswordToken +resetPasswordExpires")
     .exec();
-  console.log(user);
   if (!user) {
     return null; // Token not found or expired
   }
 
   user.userPassword = body.userPassword; // new raw password
-  user.resetPasswordExpires = Date.now() - 1000;
+  user.resetPasswordToken = undefined;
+  user.resetPasswordExpires = undefined;
 
-  await user.save();
+  await user.save(); // This will trigger the pre-save hook to hash the password
 
   await sendEmail(
     user.userEmail,
@@ -83,7 +93,9 @@ export const resetPassword = async (body) => {
 
 export const removeuser = async (id) => {
   //return value of asyn func is promise
-  const user = userSchema.findByIdAndDelete({ UserId: id }).exec();
+  const user = userSchema
+    .findOneAndDelete({ $or: [{ UserId: id }, { userName: id }] })
+    .exec();
   return user;
 };
 
@@ -101,12 +113,16 @@ export const resetLink = async (body) => {
   const token = crypto.randomBytes(32).toString("hex");
   const expires = Date.now() + 3600000;
 
-  findUser.resetPasswordToken = token;
+  findUser.resetPasswordToken = crypto
+    .createHash("sha256")
+    .update(token)
+    .digest("hex");
   findUser.resetPasswordExpires = expires;
 
   await findUser.save();
 
-  const resetLink = `http://yourfrontend.com/reset-password/${token}`;
+  const frontendUrl = process.env.FRONTEND_URL || "http://localhost:3000";
+  const resetLink = `${frontendUrl}/reset-password/${token}`;
 
   const emailnotificationID = await sendEmail(
     findUser.userEmail,
@@ -131,9 +147,18 @@ export const resetLink = async (body) => {
 export const updateDetails = async (id, updateduser) => {
   //return value of asyn func is promise
   //const reminderwithdate  = {...updatedReminder, lastModifiedDate: Date.now()}
-  const userNew = { ...updateduser };
+  const allowedFields = [
+    "userName",
+    "userEmail",
+    "PhoneNumber",
+    "driverDetails",
+    "commuterPreference",
+  ];
+  const userNew = Object.fromEntries(
+    Object.entries(updateduser).filter(([key]) => allowedFields.includes(key))
+  );
   const user = await userSchema
-    .findOneAndUpdate({ UserId: id }, userNew, {
+    .findOneAndUpdate({ $or: [{ UserId: id }, { userName: id }] }, userNew, {
       new: true,
       runValidators: true,
     })

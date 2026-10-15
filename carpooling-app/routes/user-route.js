@@ -17,20 +17,28 @@ router
 //route the paramterized methods with controller logic
 router
   .route("/:userId")
-  .get(userAuthController.findbyUserName)
+  .get(
+    authenticateUser.verifyJWT,
+    authenticateUser.validateUser(roleAccess.commonAccess),
+    authenticateUser.authorizeSelfOrAdmin("userId"),
+    userAuthController.findbyUserName
+  )
   .delete(
     authenticateUser.verifyJWT,
     authenticateUser.validateUser(roleAccess.commonAccess),
+    authenticateUser.authorizeSelfOrAdmin("userId"),
     userAuthController.deleteUser
   )
   .patch(
     authenticateUser.verifyJWT,
     authenticateUser.validateUser(roleAccess.commonAccess),
+    authenticateUser.authorizeSelfOrAdmin("userId"),
     userAuthController.updatuser
   )
   .put(
     authenticateUser.verifyJWT,
     authenticateUser.validateUser(roleAccess.commonAccess),
+    authenticateUser.authorizeSelfOrAdmin("userId"),
     userAuthController.updatuser
   );
 

@@ -3,7 +3,7 @@ import * as notificationService from "../services/notification-service.js";
 import setSuccessfulResponse from "../utils/successResponse.js";
 
 const getAllNotifications = catchAsyncFunction(async (req, res) => {
-  const userId = req.user.id; // Assuming the user id is stored in req.user
+  const userId = req.user.id;
   const notifications = await notificationService.getNotificationsByUser(
     userId
   );
@@ -38,12 +38,10 @@ const updateNotification = catchAsyncFunction(async (req, res) => {
 
 const getUserNotification = catchAsyncFunction(async (req, res) => {
   const userId = req.params.userId;
-  const updateData = req.body;
-  const updatedNotification = await notificationService.getNotificationByUserId(
-    userId,
-    updateData
+  const notifications = await notificationService.getNotificationsByUserId(
+    userId
   );
-  setSuccessfulResponse(updatedNotification, res);
+  setSuccessfulResponse(notifications, res);
 });
 
 export default {

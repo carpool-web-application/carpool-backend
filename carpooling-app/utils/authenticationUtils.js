@@ -7,7 +7,7 @@ import jwt from "jsonwebtoken";
 dotenv.config();
 
 export const generateJWT = (req, res, next) => {
-  const user = req.body;
+  const user = req.authenticatedUser;
   if (!user) {
     return res
       .status(400)
@@ -52,7 +52,8 @@ export const verifyJWT = (req, res, next) => {
       return next(new AppError("Access Denied: Invalid Token", 401)); //res.status(401).send("Invalid Token");
     }
 
-    req.token = decoded; // Store user information from JWT in the request object
+    req.token = decoded;
+    req.user = decoded;
     next(); // Continue to the next middleware or route handler
   });
 };
@@ -70,10 +71,23 @@ export const validateUser = (roleAccess) => {
       return next(
         new AppError(
           "Unauthorized: The user does not have neccessary role to access the endpoint",
-          401
+          403
         )
       );
     }
     next();
   });
+};
+
+export const authorizeSelfOrAdmin = (parameterName) => {
+  return (req, res, next) => {
+    const target = req.params[parameterName];
+    const caller = req.token;
+    const isSelf = [caller.id, caller.userId, caller.userName].includes(target);
+
+    if (caller.commuterType !== "Admin" && !isSelf) {
+      return next(new AppError("Forbidden: You cannot access this user", 403));
+    }
+    next();
+  };
 };

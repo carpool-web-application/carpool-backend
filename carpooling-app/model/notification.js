@@ -10,7 +10,7 @@ const notificationModel = new mongoose.Schema(
     userId: {
       // Add this field to link notification to a specific user
       type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
+      ref: "user",
       required: true,
     },
     type: {

@@ -1,4 +1,3 @@
-import { timeStamp } from "console";
 import mongoose from "mongoose";
 import { v4 as uuidv4 } from "uuid";
 
@@ -10,7 +9,7 @@ const riderReqSchema = new mongoose.Schema(
     },
     ride: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Ride",
+      ref: "Rides",
       required: true,
     },
     rider: {
@@ -33,14 +32,14 @@ const riderReqSchema = new mongoose.Schema(
     },
     PickUpTime: {
       type: Date,
-      default: Date.now(),
+      default: Date.now,
     },
     /*  DriverPostStatus: {
     type: String,
     default: null, 
   }, removed as it is taking from the driver rides*/
     CommuteStatus: {
-      type: String,
+      type: Number,
       enum: ["pending", "approved", "rejected"],
       default: "pending",
     },

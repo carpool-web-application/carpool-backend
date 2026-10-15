@@ -19,6 +19,7 @@ const io = new Server(server, {
     credentials: true, // Allows cookies and session information to be sent
   },
 });
+app.set("io", io);
 
 // MongoDB connection
 mongoose

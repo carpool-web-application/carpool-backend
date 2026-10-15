@@ -102,7 +102,8 @@ export const requestDecision = async (id, requestPayload) => {
   //const reminderwithdate  = {...updatedReminder, lastModifiedDate: Date.now()}
   const riderOrderReq = await RiderOrderReq.findOneAndUpdate(
     { RequestId: id },
-    { CommuteStatus: requestPayload.commuterStatus }
+    { CommuteStatus: requestPayload.CommuteStatus ?? requestPayload.commuterStatus },
+    { new: true, runValidators: true }
   ).exec();
   //const riderOrderReq =  RiderOrderReq.findOneAndUpdate({ RiderId: id } ,{ $push: { ratings: riderOrderReqNew.ratings } },riderOrderReqNew,{new: true}).exec();
   return riderOrderReq;

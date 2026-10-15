@@ -1,5 +1,6 @@
 import Ride from "../model/ride.js";
 import mongoose from "mongoose";
+import { findClosestRide } from "../utils/rideMatching.js";
 
 export const saveRide = async (ridePayload) => {
   //return value of asyn func is promise
@@ -17,9 +18,6 @@ export const fetchRides = async (ridePayload) => {
   }
   if (ridePayload.status) {
     query.status = ridePayload.status;
-  }
-  if (ridePayload.driverId) {
-    query.driver = ridePayload.driverId;
   }
   //return value of asyn func is promise
   const ride = await Ride.find(query)
@@ -41,6 +39,25 @@ export const fetchDriverRides = async (rideId) => {
   return ride;
 };
 
+export const fetchNearbyRide = async (search) => {
+  const pickupTime = new Date(search.PickUpTime);
+  const timeWindowMs = 60 * 60 * 1000;
+  const rides = await Ride.find({
+    status: "available",
+    Availableseats: { $gte: search.seats },
+    Cost: { $gt: 0 },
+    PickUpTime: {
+      $gte: new Date(pickupTime.getTime() - timeWindowMs),
+      $lte: new Date(pickupTime.getTime() + timeWindowMs),
+    },
+  })
+    .populate("driver", "UserId userName averageRating driverDetails.vehicle")
+    .lean()
+    .exec();
+
+  return findClosestRide(rides, search);
+};
+
 /* export const getDriverRide = async (rideId) => {
   const ride = await Ride.find({ driver: rideId }).populate("driver");
   console.log(ride);
@@ -50,7 +67,8 @@ export const fetchDriverRides = async (rideId) => {
 export const updateRideDetails = async (rideParameter, requestPayload) => {
   const ride = await Ride.findOneAndUpdate(
     { rideId: rideParameter },
-    { $set: requestPayload }
+    { $set: requestPayload },
+    { new: true, runValidators: true }
   );
   return ride;
 };

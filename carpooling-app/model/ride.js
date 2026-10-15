@@ -21,7 +21,7 @@ const rideSchema = new mongoose.Schema(
     },
     PickUpTime: {
       type: Date,
-      default: Date.now(),
+      default: Date.now,
     },
     status: {
       type: String,

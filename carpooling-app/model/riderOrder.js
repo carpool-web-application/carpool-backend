@@ -5,7 +5,7 @@ const riderOrderSchema = new mongoose.Schema(
   {
     ride: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Ride",
+      ref: "Rides",
       required: true,
     },
     rider: {

@@ -22,8 +22,23 @@ router
     authenticateUser.validateUser(roleAccess.commonAccess),
     riderController.find
   )
-  .delete(riderController.deleteRider)
-  .patch(riderController.updateRider)
-  .put(riderController.updateRider);
+  .delete(
+    authenticateUser.verifyJWT,
+    authenticateUser.validateUser(roleAccess.riderAccess),
+    authenticateUser.authorizeSelfOrAdmin("RiderUserName"),
+    riderController.deleteRider
+  )
+  .patch(
+    authenticateUser.verifyJWT,
+    authenticateUser.validateUser(roleAccess.riderAccess),
+    authenticateUser.authorizeSelfOrAdmin("RiderUserName"),
+    riderController.updateRider
+  )
+  .put(
+    authenticateUser.verifyJWT,
+    authenticateUser.validateUser(roleAccess.riderAccess),
+    authenticateUser.authorizeSelfOrAdmin("RiderUserName"),
+    riderController.updateRider
+  );
 
 export default router;

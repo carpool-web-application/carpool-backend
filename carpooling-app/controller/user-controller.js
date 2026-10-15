@@ -12,13 +12,21 @@ import {
 import setSuccessfullResponse from "../utils/successResponse.js";
 import AppError from "../utils/AppError.js";
 import { catchAsyncFunction } from "../utils/catchAsyncFunction.js";
-import { nextTick } from "process";
 import sendEmail from "../utils/notificationSetup.js";
+
+const publicUser = (user) => {
+  if (!user) return user;
+  const value = user.toObject ? user.toObject() : { ...user };
+  delete value.userPassword;
+  delete value.resetPasswordToken;
+  delete value.resetPasswordExpires;
+  return value;
+};
 
 export const post = catchAsyncFunction(async (request, response, next) => {
   const newUser = request.body;
 
-  const savedUser = await saveUser(newUser, next);
+  const savedUser = await saveUser(newUser);
   if (!savedUser) {
     return next(new AppError("User is not created", 404));
   }
@@ -37,11 +45,11 @@ export const post = catchAsyncFunction(async (request, response, next) => {
   </div>
 `
   );
-  setSuccessfullResponse(savedUser, response);
+  response.status(201).json(publicUser(savedUser));
 });
 
 export const index = catchAsyncFunction(async (request, response) => {
-  const params = request;
+  const params = request.query;
   const users = await searchuser(params);
 
   setSuccessfullResponse(users, response);
@@ -52,7 +60,7 @@ export const passwordResetLink = catchAsyncFunction(
     const body = request.body;
     const users = await resetLink(body);
 
-    setSuccessfullResponse(users, response);
+    setSuccessfullResponse(publicUser(users), response);
   }
 );
 
@@ -63,7 +71,7 @@ export const passwordReset = catchAsyncFunction(
     if (!users) {
       return next(new AppError("User password reset expired", 404));
     }
-    setSuccessfullResponse(users, response);
+    setSuccessfullResponse(publicUser(users), response);
   }
 );
 
@@ -74,7 +82,7 @@ export const login = catchAsyncFunction(async (request, response, next) => {
     return next(new AppError("User not found or password incorrect", 401));
     //return response.status(401).send("User not found or password incorrect"); removed it for common error
   }
-  request.body = user;
+  request.authenticatedUser = user;
   next();
 });
 
@@ -82,20 +90,20 @@ export const login = catchAsyncFunction(async (request, response, next) => {
 export const find = catchAsyncFunction(async (request, response) => {
   const id = request.params.id;
   const user = await getuser(id);
-  setSuccessfullResponse(user, response);
+  setSuccessfullResponse(publicUser(user), response);
 });
 
 export const findbyUserName = catchAsyncFunction(async (request, response) => {
   const id = request.params.userId;
   const user = await getuserName(id);
-  setSuccessfullResponse(user, response);
+  setSuccessfullResponse(publicUser(user), response);
 });
 
 //define the method for reminder deletion
 export const deleteUser = catchAsyncFunction(async (request, response) => {
-  const id = request.params.id;
+  const id = request.params.userId;
   const user = await removeuser(id);
-  setSuccessfullResponse(user, response);
+  setSuccessfullResponse(publicUser(user), response);
 });
 
 //define the method for reminder updation
@@ -104,5 +112,5 @@ export const updatuser = catchAsyncFunction(async (request, response) => {
   const body = request.body;
   const user = await updateDetails(id, body);
 
-  setSuccessfullResponse(user, response);
+  setSuccessfullResponse(publicUser(user), response);
 });

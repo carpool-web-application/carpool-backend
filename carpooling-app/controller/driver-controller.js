@@ -38,14 +38,14 @@ export const find = catchAsyncFunction(async (request, response) => {
 
 //define the method for reminder deletion
 export const deleteDriver = catchAsyncFunction(async (request, response) => {
-  const id = request.params.DriverUserName;
+  const id = request.params.driverId;
   const driver = await removeDriver(id);
   setSuccessfullResponse(driver, response);
 });
 
 //define the method for reminder updation
 export const updatedriver = catchAsyncFunction(async (request, response) => {
-  const id = request.params.DriverUserName;
+  const id = request.params.driverId;
   const body = request.body;
   const driver = await updateDetails(id, body);
 

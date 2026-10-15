@@ -37,6 +37,6 @@ export const updateDriver = async (id, updatedCommuter) => {
 
 export const searchDriver = async (params) => {
   //return value of asyn func is promise
-  const drivers = user.find(params).exec();
+  const drivers = user.find({ ...params, commuterType: "Driver" }).exec();
   return drivers || {};
 };

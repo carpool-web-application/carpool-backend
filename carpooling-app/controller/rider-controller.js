@@ -33,7 +33,7 @@ export const find = catchAsyncFunction(async (request, response) => {
 
 //define the method for reminder deletion
 export const deleteRider = catchAsyncFunction(async (request, response) => {
-  const id = request.params.id;
+  const id = request.params.RiderUserName;
   const rider = await removeRider(id);
   setSuccessfullResponse(rider, response);
 });

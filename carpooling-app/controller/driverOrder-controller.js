@@ -15,52 +15,46 @@ import setSuccessfullResponse from "../utils/successResponse.js";
 export const post = catchAsyncFunction(async (request, response) => {
   const newDriverOrder = request.body;
   const savedDriverOrder = await saveDriverOrder(newDriverOrder);
-  setSuccessfulResponse(savedDriverOrder, response);
+  setSuccessfullResponse(savedDriverOrder, response);
 });
 
 export const index = catchAsyncFunction(async (request, response) => {
   const params = {};
   const driverOrders = await searchDriverOrder(params);
-  setSuccessfulResponse(driverOrders, response);
+  setSuccessfullResponse(driverOrders, response);
 });
 
 //define the method for driverOrder searching
 export const find = catchAsyncFunction(async (request, response) => {
   const id = request.params.UserId;
   const driverOrder = await getDriverOrder(id);
-  setSuccessfulResponse(driverOrder, response);
+  setSuccessfullResponse(driverOrder, response);
 });
 
-export const findbyOrderNumber = async (request, response) => {
-  try {
+export const findbyOrderNumber = catchAsyncFunction(
+  async (request, response) => {
     const id = request.params.DriverOrderNumber;
     const driverOrder = await getDriverOrderNumberReq(id);
-    setSuccessfulResponse(driverOrder, response);
-  } catch (err) {
-    setErrorResponse(err, response);
+    setSuccessfullResponse(driverOrder, response);
   }
-};
+);
 
 //define the method for reminder deletion
-export const deleteDriverOrder = async (request, response) => {
-  try {
+export const deleteDriverOrder = catchAsyncFunction(
+  async (request, response) => {
     const id = request.params.orderId;
     const driverOrder = await removeDriverOrder(id);
-    setSuccessfulResponse(driverOrder, response);
-  } catch (err) {
-    setErrorResponse(err, response);
+    setSuccessfullResponse(driverOrder, response);
   }
-};
+);
 
 //define the method for reminder updation
-export const updateDriverOrder = async (request, response) => {
-  try {
+export const updateDriverOrder = catchAsyncFunction(
+  async (request, response) => {
     const id = request.params.orderId;
     const body = request.body;
     const driverOrder = await updateDetails(id, body);
 
-    setSuccessfulResponse(driverOrder, response);
-  } catch (err) {
-    setErrorResponse(err, response);
+    setSuccessfullResponse(driverOrder, response);
   }
-};
+);

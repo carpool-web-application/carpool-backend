@@ -1,7 +1,6 @@
 import mongoose from "mongoose";
 import { v4 as uuidv4 } from "uuid";
 import bcrypt from "bcrypt";
-import { type } from "os";
 
 const user = new mongoose.Schema({
   UserId: {
@@ -21,6 +20,7 @@ const user = new mongoose.Schema({
   userPassword: {
     type: String,
     required: [true, "User Password is required"],
+    select: false,
   },
   PhoneNumber: {
     type: String,
@@ -66,10 +66,12 @@ const user = new mongoose.Schema({
   resetPasswordToken: {
     type: String,
     default: null,
+    select: false,
   },
   resetPasswordExpires: {
     type: Date,
     default: null,
+    select: false,
   },
 });
 

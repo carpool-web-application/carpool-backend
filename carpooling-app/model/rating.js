@@ -1,13 +1,11 @@
 import mongoose from "mongoose";
-import { type } from "os";
-import { v4 as uuidv4 } from "uuid";
 
 const rating = new mongoose.Schema({
   order: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "order",
+    ref: "RiderOrders",
     required: [true, "Order Information is required"],
-    unqiue: true,
+    unique: true,
   },
   ratedUser: {
     type: mongoose.Schema.Types.ObjectId,

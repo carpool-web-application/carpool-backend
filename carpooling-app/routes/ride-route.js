@@ -4,6 +4,13 @@ import * as authenticateUser from "../utils/authenticationUtils.js";
 import roleAccess from "../utils/SystemConstant.js";
 const router = express.Router();
 
+router.get(
+  "/nearby",
+  authenticateUser.verifyJWT,
+  authenticateUser.validateUser(roleAccess.riderAccess),
+  rideController.fetchNearby
+);
+
 router
   .route("/")
   .get(

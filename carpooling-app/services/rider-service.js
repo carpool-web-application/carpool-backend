@@ -39,6 +39,6 @@ export const updateRider = async (id, updatedCommuter) => {
 
 export const searchRider = async (params) => {
   //return value of asyn func is promise
-  const riders = user.find(params).exec();
+  const riders = user.find({ ...params, commuterType: "Rider" }).exec();
   return riders;
 };

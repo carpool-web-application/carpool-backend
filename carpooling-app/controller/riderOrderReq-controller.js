@@ -14,7 +14,6 @@ import {
 } from "../services/riderOrderReq-service.js";
 import AppError from "../utils/AppError.js";
 //reminderService.save();
-import { io } from "../../server.js";
 
 //define the method for reminder creation
 export const post = catchAsyncFunction(async (request, response, next) => {
@@ -26,9 +25,9 @@ export const post = catchAsyncFunction(async (request, response, next) => {
       new AppError("The rider already requested for the same ride", 404)
     );
   }
-  io.emit("approval_notification", {
-    orderNumber: savedRiderOrder.DriverOrderNumber,
-    riderId: savedRiderOrder.RiderId,
+  request.app.get("io")?.emit("approval_notification", {
+    ride: savedRiderOrder.ride,
+    riderId: savedRiderOrder.rider,
     message: "New rider Request approve or reject",
   });
   setSuccessfullResponse(savedRiderOrder, response);
@@ -76,7 +75,7 @@ export const findbyOrderNumber = catchAsyncFunction(
 //define the method for reminder deletion
 export const deleteRiderOrder = catchAsyncFunction(
   async (request, response) => {
-    const id = request.params.id;
+    const id = request.params.UserId;
     const riderOrder = await removeRiderOrderReq(id);
     setSuccessfullResponse(riderOrder, response);
   }
@@ -97,7 +96,7 @@ export const updateRideRequest = catchAsyncFunction(
   async (request, response) => {
     const requestPayload = request.body;
     const rideRequest = await requestDecision(
-      request.params.RideRequestId,
+      request.params.RequestId,
       requestPayload
     );
     setSuccessfullResponse(rideRequest, response);

@@ -31,7 +31,7 @@ router
   );
 
 router
-  .route("./:userId")
+  .route("/user/:userId")
   .get(
     authenticateUser.verifyJWT,
     authenticateUser.validateUser(roleAccess.commonAccess),

@@ -2,9 +2,7 @@ import DriverOrder from "../model/driverOrder.js";
 
 export const saveDriverOrder = async (newDriverOrder) => {
   //return value of asyn func is promise
-  const driverOrder = new DriverOrder({
-    newDriverOrder,
-  }).save();
+  const driverOrder = new DriverOrder(newDriverOrder).save();
   return driverOrder;
 };
 
@@ -24,7 +22,7 @@ export const getDriverOrderNumberReq = async (id) => {
 
 export const removeDriverOrder = async (id) => {
   //return value of asyn func is promise
-  const driverOrder = DriverOrder.findOneAndDelete(id).exec();
+  const driverOrder = DriverOrder.findByIdAndDelete(id).exec();
   return driverOrder;
 };
 
@@ -33,8 +31,9 @@ export const updateDetails = async (id, updateddriverOrder) => {
   //return value of asyn func is promise
   //const reminderwithdate  = {...updatedReminder, lastModifiedDate: Date.now()}
   const driverOrderNew = { ...updateddriverOrder };
-  const driverOrder = DriverOrder.findOneAndUpdate(id, driverOrderNew, {
+  const driverOrder = DriverOrder.findByIdAndUpdate(id, driverOrderNew, {
     new: true,
+    runValidators: true,
   }).exec();
   return driverOrder;
 };

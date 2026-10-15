@@ -8,7 +8,11 @@ const router = express.Router();
 router
   .route("/")
   //.post(driverController.post) not required as merged the driver into users
-  .get(driverController.index); //include rbac into the application
+  .get(
+    authenticateUser.verifyJWT,
+    authenticateUser.validateUser(roleAccess.commonAccess),
+    driverController.index
+  );
 
 //route the paramterized methods with controller logic
 router
@@ -18,8 +22,23 @@ router
     authenticateUser.validateUser(roleAccess.driverAccess),
     driverController.find
   )
-  .delete(driverController.deleteDriver)
-  .patch(driverController.updatedriver)
-  .put(driverController.updatedriver);
+  .delete(
+    authenticateUser.verifyJWT,
+    authenticateUser.validateUser(roleAccess.driverAccess),
+    authenticateUser.authorizeSelfOrAdmin("driverId"),
+    driverController.deleteDriver
+  )
+  .patch(
+    authenticateUser.verifyJWT,
+    authenticateUser.validateUser(roleAccess.driverAccess),
+    authenticateUser.authorizeSelfOrAdmin("driverId"),
+    driverController.updatedriver
+  )
+  .put(
+    authenticateUser.verifyJWT,
+    authenticateUser.validateUser(roleAccess.driverAccess),
+    authenticateUser.authorizeSelfOrAdmin("driverId"),
+    driverController.updatedriver
+  );
 
 export default router;

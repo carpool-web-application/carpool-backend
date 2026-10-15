@@ -171,3 +171,9 @@ dist
 dist
 .dist
 *./backend/js
+
+# Local configuration and OS metadata
+.env
+.env.*
+!.env.example
+.DS_Store

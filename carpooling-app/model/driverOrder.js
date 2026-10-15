@@ -4,18 +4,18 @@ const driverOrderSchema = new mongoose.Schema(
   {
     ride: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Ride",
+      ref: "Rides",
       required: true,
     },
     driver: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
+      ref: "user",
       required: true,
     },
     riderOrders: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "RiderOrder",
+        ref: "RiderOrders",
       },
     ], // ✅ Links all rider orders for this ride
     totalFareCollected: {
